@@ -22,3 +22,45 @@ const msg = await anthropic.messages.create({
   messages: [{ role: "user", content: "Hello, Claude" }],
 });
 console.log(msg.content[0].text);
+
+/**
+ * Translates content for the specified country and locales.
+ *
+ * @function translateLocales
+ * @param {string} country - The country for which translations are being generated.
+ * @param {Array<string>} locales - An array of locale codes (e.g., ['en', 'es', 'fr']).
+ * @param {string} targetLocale - The specific locale for which the translation is required.
+ * @returns {string} The translated content for the given country and locale.
+ *
+ * @description
+ * This function generates translations for the given country and locales by sending
+ * a request to the Anthropic API. If the target locale is found, the function immediately
+ * returns the translation, avoiding unnecessary iterations.
+ */
+async function translateLocales(country, locales, targetLocale) {
+    for (const locale of locales) {
+      if (locale === targetLocale) {
+        // Generate a translation prompt specific to the country and locale
+        const prompt = `Translate the following message to ${locale} for the country ${country}: "Hello, Claude"`;
+  
+        const response = await anthropic.messages.create({
+          model: "claude-3-7-sonnet-20250219",
+          max_tokens: 1024,
+          messages: [{ role: "user", content: prompt }],
+        });
+        return response.content[0].text;
+      }
+    }
+  
+    // Return a default message if the target locale is not found
+    return `No translation found for locale: ${targetLocale}`;
+  }
+  
+  // Define the locales, country, and target locale for translation
+  const locales = ['en', 'es', 'fr', 'de', 'it'];
+  const country = 'FR';
+  const targetLocale = 'fr';
+  
+  // Generate the translation and log the result
+  const translation = await translateLocales(country, locales, targetLocale);
+  console.log(translation);
