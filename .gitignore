@@ -1,0 +1,19 @@
+# Environment files
+.env
+
+# Node.js dependencies
+node_modules/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Logs
+*.log
+
+# OS-specific files
+.DS_Store
+
+# Git-specific files
+*.swp
+*.swo
